@@ -18,5 +18,4 @@ class App extends Component {
   }
 }
 
-// @ts-expect-error: this is a typescript component
 render(<App />, document.getElementById('app'));
