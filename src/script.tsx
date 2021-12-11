@@ -1,17 +1,74 @@
 import { render, Component } from 'preact';
-import { useState } from 'preact/hooks';
 
-const App = () => {
-  const [count, setCount] = useState(0);
+import db from './lib/db';
 
-  return (
-    <div>
-      <p>You clicked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>
-        Click me
-      </button>
-    </div>
-  );
+class App extends Component {
+  state = {
+    viewer: [],
+    key: '',
+    value: ''
+  }
+
+  componentDidMount() {
+    this.update();
+  }
+
+  add = () => {
+    db.set(this.state.key, this.state.value);
+    console.log(db.entries())
+    this.update();
+  };
+
+  remove = () => {
+    db.del(this.state.key);
+    this.update();
+  };
+
+  update = () => {
+    console.log('state was updated to:', db.entries());
+    this.setState({
+      viewer: db.entries()
+    });
+  }
+
+  render({}, { viewer }) {
+    return (
+      <div>
+        <h1>db</h1>
+        <div>
+          <h2>viewer</h2>
+          <pre>{JSON.stringify(viewer, null, 2)}</pre>
+        </div>
+        <div>
+          <h2>add</h2>
+          <div>
+            <input
+              type="text"
+              placeholder="key"
+              onInput={e => this.setState({ key: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="value"
+              onInput={e => this.setState({ value: e.target.value })}
+            />
+            <button onClick={this.add}>Add</button>
+          </div>
+        </div>
+        <div>
+          <h2>remove</h2>
+          <div>
+            <input
+              type="text"
+              placeholder="key"
+              onInput={e => this.setState({ key: e.target.value })}
+            />
+            <button onClick={this.remove}>Remove</button>
+          </div>
+        </div>
+      </div>
+    )
+  };
 };
 
 render(<App />, document.getElementById('app'));

@@ -16,6 +16,7 @@ interface db {
   set: (key: string, value: Value) => void;
   del: (key: string) => void;
   clear: () => void;
+  entries: () => [string, Value][];
 }
 
 const db: db = {
@@ -115,6 +116,9 @@ const db: db = {
     } else {
       localStorage.clear();
     }
+  },
+  entries: () => {
+    return db.keys().map(key => [key, db.get(key)]) ?? [];
   }
 };
 
