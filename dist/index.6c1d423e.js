@@ -140,12 +140,12 @@
       this[globalName] = mainExports;
     }
   }
-})({"aK4Wh":[function(require,module,exports) {
+})({"gz5oP":[function(require,module,exports) {
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "4a236f9275d0a351";
-module.bundle.HMR_BUNDLE_ID = "cf5b44f0d102a750";
+module.bundle.HMR_BUNDLE_ID = "a269b61a6c1d423e";
 "use strict";
 function _createForOfIteratorHelper(o, allowArrayLike) {
     var it;
@@ -458,7 +458,7 @@ function hmrAcceptRun(bundle, id) {
     acceptedAssets[id] = true;
 }
 
-},{}],"2F9Y8":[function(require,module,exports) {
+},{}],"9o1sG":[function(require,module,exports) {
 var _jsxRuntime = require("preact/jsx-runtime");
 var _preact = require("preact");
 var _hooks = require("preact/hooks");
@@ -466,7 +466,7 @@ const App = ()=>{
     const [count, setCount] = _hooks.useState(0);
     return(/*#__PURE__*/ _jsxRuntime.jsxs("div", {
         __source: {
-            fileName: "script.tsx",
+            fileName: "src/script.tsx",
             lineNumber: 8,
             columnNumber: 5
         },
@@ -474,7 +474,7 @@ const App = ()=>{
         children: [
             /*#__PURE__*/ _jsxRuntime.jsxs("p", {
                 __source: {
-                    fileName: "script.tsx",
+                    fileName: "src/script.tsx",
                     lineNumber: 9,
                     columnNumber: 7
                 },
@@ -489,7 +489,7 @@ const App = ()=>{
                 onClick: ()=>setCount(count + 1)
                 ,
                 __source: {
-                    fileName: "script.tsx",
+                    fileName: "src/script.tsx",
                     lineNumber: 10,
                     columnNumber: 7
                 },
@@ -501,14 +501,52 @@ const App = ()=>{
 };
 _preact.render(/*#__PURE__*/ _jsxRuntime.jsx(App, {
     __source: {
-        fileName: "script.tsx",
+        fileName: "src/script.tsx",
         lineNumber: 17,
         columnNumber: 8
     },
     __self: undefined
 }), document.getElementById('app'));
 
-},{"preact":"2ETNS","preact/jsx-runtime":"fr9w2","preact/hooks":"geNGJ"}],"2ETNS":[function(require,module,exports) {
+},{"preact/jsx-runtime":"fr9w2","preact":"2ETNS","preact/hooks":"geNGJ"}],"fr9w2":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Fragment", ()=>_preact.Fragment
+);
+parcelHelpers.export(exports, "jsx", ()=>e1
+);
+parcelHelpers.export(exports, "jsxs", ()=>e1
+);
+parcelHelpers.export(exports, "jsxDEV", ()=>e1
+);
+var _preact = require("preact");
+var o = 0;
+function e1(_, e, n, t, f) {
+    var l, s, u = {
+    };
+    for(s in e)"ref" == s ? l = e[s] : u[s] = e[s];
+    var a = {
+        type: _,
+        props: u,
+        key: n,
+        ref: l,
+        __k: null,
+        __: null,
+        __b: 0,
+        __e: null,
+        __d: void 0,
+        __c: null,
+        __h: null,
+        constructor: void 0,
+        __v: --o,
+        __source: t,
+        __self: f
+    };
+    if ("function" == typeof _ && (l = _.defaultProps)) for(s in l)void 0 === u[s] && (u[s] = l[s]);
+    return _preact.options.vnode && _preact.options.vnode(a), a;
+}
+
+},{"preact":"2ETNS","@parcel/transformer-js/src/esmodule-helpers.js":"bN3jm"}],"2ETNS":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "render", ()=>S
@@ -866,45 +904,7 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"fr9w2":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Fragment", ()=>_preact.Fragment
-);
-parcelHelpers.export(exports, "jsx", ()=>e1
-);
-parcelHelpers.export(exports, "jsxs", ()=>e1
-);
-parcelHelpers.export(exports, "jsxDEV", ()=>e1
-);
-var _preact = require("preact");
-var o = 0;
-function e1(_, e, n, t, f) {
-    var l, s, u = {
-    };
-    for(s in e)"ref" == s ? l = e[s] : u[s] = e[s];
-    var a = {
-        type: _,
-        props: u,
-        key: n,
-        ref: l,
-        __k: null,
-        __: null,
-        __b: 0,
-        __e: null,
-        __d: void 0,
-        __c: null,
-        __h: null,
-        constructor: void 0,
-        __v: --o,
-        __source: t,
-        __self: f
-    };
-    if ("function" == typeof _ && (l = _.defaultProps)) for(s in l)void 0 === u[s] && (u[s] = l[s]);
-    return _preact.options.vnode && _preact.options.vnode(a), a;
-}
-
-},{"preact":"2ETNS","@parcel/transformer-js/src/esmodule-helpers.js":"bN3jm"}],"geNGJ":[function(require,module,exports) {
+},{}],"geNGJ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "useState", ()=>l
@@ -1070,6 +1070,6 @@ function w(n, t) {
     return "function" == typeof t ? t(n) : t;
 }
 
-},{"preact":"2ETNS","@parcel/transformer-js/src/esmodule-helpers.js":"bN3jm"}]},["aK4Wh","2F9Y8"], "2F9Y8", "parcelRequire94c2")
+},{"preact":"2ETNS","@parcel/transformer-js/src/esmodule-helpers.js":"bN3jm"}]},["gz5oP","9o1sG"], "9o1sG", "parcelRequire94c2")
 
-//# sourceMappingURL=index.d102a750.js.map
+//# sourceMappingURL=index.6c1d423e.js.map

@@ -1,1 +1,1 @@
-{"mappings":"AAAA;EACE;EACA;EACA","sources":["style.scss"],"sourcesContent":["body {\r\n  background-color: #303030;\r\n  color: #fff;\r\n  font-size: 16px;\r\n}"],"names":[],"version":3,"file":"index.3d6b4524.css.map","sourceRoot":"/__parcel_source_root/"}
+{"mappings":"AAAA;EACE;EACA;EACA;EACA","sources":["style.scss"],"sourcesContent":["body {\r\n  background-color: #303030;\r\n  color: #fff;\r\n  font-size: 16px;\r\n  font-family: 'Arial', sans-serif;\r\n}"],"names":[],"version":3,"file":"index.3d6b4524.css.map","sourceRoot":"/__parcel_source_root/"}
