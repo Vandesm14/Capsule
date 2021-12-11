@@ -15,6 +15,7 @@ interface db {
   keys: () => string[];
   set: (key: string, value: Value) => void;
   del: (key: string) => void;
+  clear: () => void;
 }
 
 const db: db = {
@@ -108,6 +109,13 @@ const db: db = {
       localStorage.removeItem(key);
     }
   },
+  clear: () => {
+    if(db.__testMode) {
+      db.__testDB = {};
+    } else {
+      localStorage.clear();
+    }
+  }
 };
 
 export default db;
