@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@parcel/config-default": "^2.0.1",
+    "preact": "^10.6.4"
+  },
+  "scripts": {
+    "dev": "parcel serve ./index.html -p 5500"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.0.1"
+  }
+}
