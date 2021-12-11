@@ -1,6 +1,6 @@
 module.exports = {
   preset: 'ts-jest',
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
 	collectCoverageFrom: [
 		// 'src/**/*.test.ts' // tests only
 		'src/**/*.ts' // full coverage

@@ -1,11 +1,26 @@
-// a redis-like wrapper for local storage
-
 type Value = string | number | boolean | null | undefined | object | Value[];
 
-const db = {
+interface db {
+  __testMode: boolean;
+  __testDB: Record<string, Value>;
+  __setTestDB: (value: Record<string, Value>) => void;
+  __setTestMode: (isDev: boolean) => void;
+  copy: (key: string, newKey: string) => void;
+  rename: (key: string, newKey: string) => void;
+  sort: (key: string, sort: string) => void;
+  type: (key: string) => string;
+  has: (key: string) => boolean;
+  size: () => void;
+  get: (key: string) => Value;
+  keys: () => string[];
+  set: (key: string, value: Value) => void;
+  del: (key: string) => void;
+}
+
+const db: db = {
   __testMode: false,
   __testDB: {},
-  __setTestDB: (value: object) => {
+  __setTestDB: (value: Record<string, Value>) => {
     db.__testDB = value;
   },
   __setTestMode: (isDev: boolean) => {

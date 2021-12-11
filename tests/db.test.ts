@@ -1,31 +1,24 @@
-import { Suite, assert } from '@nullify/testing';
-import db from '../src/lib/localRedis';
+// @ts-envorinment jest
 
-const { test: _test, end } = Suite.create('Local Redis');
+import db from '../src/lib/db';
 
-const test = async (name: string, fn: () => Promise<void> | void) => {
+beforeAll(() => {
   db.__setTestDB({});
-  _test(name, fn);
-}
+})
 
-db.__setTestMode(true);
 
 test('is empty', () => {
-  assert.equal(db.size(), 0);
+  expect(db.size()).toBe(0);
 });
 
 test('set', () => {
   db.set('foo', 'bar');
-  assert.equal(db.get('foo'), 'bar');
+  expect(db.get('foo')).toBe('bar');
 });
 
 test('set multiple', () => {
   db.set('foo', 'bar');
   db.set('bar', 'foo');
-  assert.equal(db.get('foo'), 'bar');
-  assert.equal(db.get('bar'), 'foo');
+  expect(db.get('foo')).toBe('bar');
+  expect(db.get('bar')).toBe('foo');
 });
-
-
-
-export default await end;
