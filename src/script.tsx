@@ -15,7 +15,6 @@ class App extends Component {
 
   add = () => {
     db.set(this.state.key, this.state.value);
-    console.log(db.entries())
     this.update();
   };
 
@@ -71,4 +70,5 @@ class App extends Component {
   };
 };
 
+// @ts-expect-error: preact is different from react
 render(<App />, document.getElementById('app'));
