@@ -13,7 +13,6 @@
   "license": "MIT",
   "author": "vandesm14",
   "type": "module",
-  "main": "src/index.html",
   "directories": {
     "test": "tests"
   },
