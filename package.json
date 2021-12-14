@@ -17,22 +17,24 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "parcel build src",
+    "build": "parcel build ./src/index.html",
     "dev": "parcel serve ./src/index.html -p 5500",
     "test": "jest",
     "test:watch": "jest --watch",
     "ts-coverage": "typescript-coverage-report",
-    "ts-coverage:open": "typescript-coverage-report && npx open-cli ./coverage-ts/index.html"
+    "ts-coverage:open": "typescript-coverage-report && npx open-cli ./coverage-ts/index.html",
+    "window": "nw ./dist"
   },
   "dependencies": {
     "@types/jest": "^27.0.3",
     "jest": "^27.4.4",
+    "nwjs": "^1.4.4",
+    "preact": "^10.6.4",
     "ts-jest": "^27.1.1"
   },
   "devDependencies": {
     "@nullify/testing": "^0.0.6",
     "@parcel/transformer-sass": "^2.0.1",
-    "preact": "^10.6.4",
     "ts-node": "^9.1.1",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.1.3",
