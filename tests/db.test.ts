@@ -112,5 +112,4 @@ describe('db tests', () => {
     db.set('bar', 'foo');
     expect(db.entries()).toEqual([['foo', 'bar'], ['bar', 'foo']]);
   });
-  });
 });
