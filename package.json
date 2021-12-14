@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "parcel build ./src/index.html",
+    "build:watch": "parcel watch ./src/index.html",
     "dev": "parcel serve ./src/index.html -p 5500",
     "test": "jest",
     "test:watch": "jest --watch",

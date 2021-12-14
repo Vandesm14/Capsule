@@ -1,5 +1,4 @@
 import { render, Component } from 'preact';
-
 import db from './lib/db';
 
 class App extends Component {
