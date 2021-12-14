@@ -7,41 +7,41 @@ beforeEach(() => {
   expect(db.size()).toBe(0);
 })
 
-test('db starts blank', () => {
+it('db starts blank', () => {
   expect(db.__testDB).toEqual({});
 });
 
 describe('db tests', () => {
-  test('is empty (size)', () => {
+  it('is empty (size)', () => {
     expect(db.size()).toBe(0);
   });
 
-  test('set', () => {
+  it('set', () => {
     db.set('foo', 'bar');
     expect(db.size()).toBe(1);
   });
 
-  test('set multiple', () => {
+  it('set multiple', () => {
     db.set('foo', 'bar');
     db.set('bar', 'foo');
     expect(db.size()).toBe(2);
   });
 
-  test('get', () => {
+  it('get', () => {
     db.set('foo', 'bar');
     db.set('bar', 'foo');
     expect(db.get('foo')).toBe('bar');
     expect(db.get('bar')).toBe('foo');
   });
 
-  test('copy', () => {
+  it('copy', () => {
     db.set('foo', 'bar');
     db.copy('foo', 'bar');
     expect(db.get('foo')).toBe('bar');
     expect(db.get('bar')).toBe('bar');
   })
 
-  test('rename', () => {
+  it('rename', () => {
     db.set('foo', 'bar');
     db.rename('foo', 'bar');
     expect(db.get('foo')).toBe(null);
@@ -55,7 +55,7 @@ describe('db tests', () => {
     // expect(db.keys()).toEqual(['bar', 'foo']);
   });
 
-  test('type', () => {
+  it('type', () => {
     db.set('foo', 'bar');
     expect(db.type('foo')).toBe('string');
     db.set('foo', 123);
@@ -70,13 +70,13 @@ describe('db tests', () => {
     expect(db.type('foo')).toBe('none');
   });
 
-  test('has', () => {
+  it('has', () => {
     db.set('foo', 'bar');
     expect(db.has('foo')).toBe(true);
     expect(db.has('bar')).toBe(false);
   });
 
-  test('size', () => {
+  it('size', () => {
     db.set('foo', 'bar');
     expect(db.size()).toBe(1);
 
@@ -84,13 +84,7 @@ describe('db tests', () => {
     expect(db.size()).toBe(2);
   });
 
-  test('keys', () => {
-    db.set('foo', 'bar');
-    db.set('bar', 'foo');
-    expect(db.keys()).toEqual(['foo', 'bar']);
-  });
-
-  test('del', () => {
+  it('del', () => {
     db.set('foo', 'bar');
     db.set('bar', 'foo');
     expect(db.size()).toBe(2);
@@ -99,11 +93,24 @@ describe('db tests', () => {
     expect(db.get('foo')).toBe(null);
   });
 
-  test('clear', () => {
+  it('clear', () => {
     db.set('foo', 'bar');
     db.set('bar', 'foo');
     expect(db.size()).toBe(2);
     db.clear();
     expect(db.size()).toBe(0);
+  });
+
+  it('keys', () => {
+    db.set('foo', 'bar');
+    db.set('bar', 'foo');
+    expect(db.keys()).toEqual(['foo', 'bar']);
+  });
+
+  it('entries', () => {
+    db.set('foo', 'bar');
+    db.set('bar', 'foo');
+    expect(db.entries()).toEqual([['foo', 'bar'], ['bar', 'foo']]);
+  });
   });
 });

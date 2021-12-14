@@ -2,30 +2,111 @@ type Value = string | number | boolean | null | undefined | object | Value[];
 
 interface db {
   __testMode: boolean;
-  __testDB: Record<string, Value>;
-  __setTestDB: (value: Record<string, Value>) => void;
-  __setTestMode: (isDev: boolean) => void;
+  __testDB: Record<string, string>;
+  __cache: Map<string, Value>;
+  setTestDB: (value: Record<string, Value>) => void;
+  setTestMode: (isDev: boolean) => void;
   copy: (key: string, newKey: string) => void;
   rename: (key: string, newKey: string) => void;
   sort: (key: string, sort: string) => void;
   type: (key: string) => string;
   has: (key: string) => boolean;
   size: () => void;
+
+  // core functions
   get: (key: string) => Value;
-  keys: () => string[];
   set: (key: string, value: Value) => void;
   del: (key: string) => void;
   clear: () => void;
+  keys: () => string[];
   entries: () => [string, Value][];
+}
+
+function get(db: db, key: string): value {
+  let value: string;
+  if (db.__cache.has(key)) {
+    return db.__cache.get(key);
+  } else {
+    if (db.__testMode) {
+      value = db.__testDB[key];
+    } else {
+      value = localStorage.getItem(key);
+    }
+  }
+
+  try {
+    return JSON.parse(value);
+  } catch (e) {
+    throw new Error(`Error parsing value for key ${key}`);
+  }
+}
+
+function set(db: db, key: string, value: Value) {
+  if (db.__testMode) {
+    db.__testDB[key] = JSON.stringify(value);
+  } else {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  db.__cache.set(key, value);
+}
+
+function del(db: db, key: string) {
+  if (db.__testMode) {
+    delete db.__testDB[key];
+  } else {
+    localStorage.removeItem(key);
+  }
+
+  db.__cache.delete(key);
+}
+
+function clear(db: db) {
+  if (db.__testMode) {
+    db.__testDB = {};
+  } else {
+    localStorage.clear();
+  }
+
+  db.__cache.clear();
+}
+
+function keys(db: db): string[] {
+  if (db.__testMode) {
+    return Object.keys(db.__testDB);
+  } else {
+    return Object.keys(localStorage);
+  }
+}
+
+function entries(db: db): [string, Value][] {
+  if (db.__testMode) {
+    return Object.entries(db.__testDB);
+  } else {
+    return Object.entries(localStorage).map(el => {
+      if (db.__cache.has(el[0])) {
+        return [el[0], db.__cache.get(el[0])];
+      } else {
+        return [el[0], JSON.parse(el[1])]
+      }
+    });
+  }
 }
 
 const db: db = {
   __testMode: false,
   __testDB: {},
-  __setTestDB: (value: Record<string, Value>) => {
-    db.__testDB = value;
+  __cache: new Map(),
+  setTestDB: (value: Record<string, Value>) => {
+    const values: Record<string, string> = {};
+    for (const key in value) {
+      if (value.hasOwnProperty(key)) {
+        values[key] = JSON.stringify(value[key]);
+      }
+    }
+    db.__testDB = values;
   },
-  __setTestMode: (isDev: boolean) => {
+  setTestMode: (isDev: boolean) => {
     db.__testMode = isDev;
   },
   copy: (key: string, newKey: string) => {
@@ -82,43 +163,22 @@ const db: db = {
 
   // core functions
   get: (key: string): Value => {
-    const value = localStorage.getItem(key);
-    try {
-      return JSON.parse(value);
-    } catch (e) {
-      throw new Error(`Error parsing value for key ${key}`);
-    }
-  },
-  keys: () => {
-    if (db.__testMode) {
-      return Object.keys(db.__testDB);
-    } else {
-      return Object.keys(localStorage);
-    }
+    return get(db, key);
   },
   set: (key: string, value: Value) => {
-    if(db.__testMode) {
-      db.__testDB[key] = JSON.stringify(value);
-    } else {
-      localStorage.setItem(key, JSON.stringify(value));
-    }
+    set(db, key, value);
   },
   del: (key: string) => {
-    if(db.__testMode) {
-      delete db.__testDB[key];
-    } else {
-      localStorage.removeItem(key);
-    }
+    del(db, key);
   },
   clear: () => {
-    if(db.__testMode) {
-      db.__testDB = {};
-    } else {
-      localStorage.clear();
-    }
+    clear(db);
+  },
+  keys: () => {
+    return keys(db);
   },
   entries: () => {
-    return db.keys().map(key => [key, db.get(key)]) ?? [];
+    return entries(db);
   }
 };
 
