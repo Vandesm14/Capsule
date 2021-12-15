@@ -172,7 +172,6 @@ describe('DataStore', () => {
   });
 });
 
-
 describe('DataSet', () => {
   describe('push', () => {
     it('push a string', () => {
