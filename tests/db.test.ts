@@ -1,6 +1,6 @@
 import { DataStore, DataSet } from '../src/lib/db';
 
-let db = new DataStore();
+let db: DataStore<string>;
 
 beforeEach(() => {
   db = new DataStore();
@@ -164,12 +164,12 @@ describe('DataStore', () => {
     describe('sort', () => {
       it('sort', () => {
         db.create('key', ['value', 'foo', 'bar']);
-        db.sort('key', (a, b) => a.localeCompare(b));
+        db.sort('key', (a, b) => (a as string).localeCompare(b as string));
         expect(db.read('key')).toEqual(new DataSet(['bar', 'foo', 'value']));
       });
 
       it('sort using non-existent key', () => {
-        expect(() => db.sort('key', (a, b) => a.localeCompare(b))).toThrow(
+        expect(() => db.sort('key', (a, b) => (a as string).localeCompare(b as string))).toThrow(
           new Error('Key key does not exist')
         );
       });
@@ -253,7 +253,7 @@ describe('DataSet', () => {
   it('map', () => {
     db.create('key', ['value', 'foo', 'bar']);
     const set = db.read('key');
-    const result = set.map((value: string) => value + '!');
+    const result = set.map(value => value + '!');
     expect(result).toEqual(new DataSet(['value!', 'foo!', 'bar!']));
     expect(db.read('key')).toEqual(new DataSet(['value', 'foo', 'bar']));
   });
@@ -261,7 +261,7 @@ describe('DataSet', () => {
   it('filter', () => {
     db.create('key', ['value', 'foo', 'bar']);
     const set = db.read('key');
-    const result = set.filter('key', (value: string) => value.includes('a'));
+    const result = set.filter(value => value.includes('a'));
     expect(result).toEqual(new DataSet(['value', 'bar']));
     expect(db.read('key')).toEqual(new DataSet(['value', 'foo', 'bar']));
   });
@@ -269,7 +269,7 @@ describe('DataSet', () => {
   it('sort', () => {
     db.create('key', ['value', 'foo', 'bar']);
     const set = db.read('key');
-    const result = set.sort('key', (value: string, value2: string) => value.localeCompare(value2));
+    const result = set.sort((value, value2) => value.localeCompare(value2));
     expect(result).toEqual(new DataSet(['bar', 'foo', 'value']));
     expect(db.read('key')).toEqual(new DataSet(['value', 'foo', 'bar']));
   });

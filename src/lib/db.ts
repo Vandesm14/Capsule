@@ -1,14 +1,14 @@
-export type Value = string | string[] | Set<string> | DataSet;
+export type Value<V = string> = V | V[] | Set<V> | DataSet<V>;
 
-export class DataSet extends Set<string> {
-  push(value: Value): DataSet {
-    let _value: DataSet;
-    if (typeof value === 'string') {
-      _value = new DataSet([value]);
-    } else if (value instanceof DataSet) {
+export class DataSet<V = string> extends Set<V> {
+  push(value: Value<V>): DataSet<V> {
+    let _value: DataSet<V>;
+    if (value instanceof DataSet) {
       _value = value;
+    } else if (Array.isArray(value) || value instanceof Set) {
+      _value = new DataSet<V>(value);
     } else {
-      _value = new DataSet(value);
+      _value = new DataSet<V>([value]);
     }
     for (const item of _value) {
       this.add(item);
@@ -16,7 +16,7 @@ export class DataSet extends Set<string> {
     return this;
   }
 
-  pop(): DataSet | null {
+  pop(): DataSet<V> | null {
     if (this.size > 0) {
       const item = Array.from(this)[this.size - 1];
       this.delete(item);
@@ -26,16 +26,16 @@ export class DataSet extends Set<string> {
     }
   }
 
-  map(fn: (value: string) => string): DataSet {
-    const newSet = new DataSet();
+  map(fn: (value: V) => V): DataSet<V> {
+    const newSet = new DataSet<V>();
     for (const item of this) {
       newSet.add(fn(item));
     }
     return newSet;
   }
 
-  filter(key: string, fn: (value: string) => boolean): DataSet {
-    const newSet = new DataSet();
+  filter(fn: (value: V) => boolean): DataSet<V> {
+    const newSet = new DataSet<V>();
     for (const item of this) {
       if (fn(item)) {
         newSet.add(item);
@@ -44,9 +44,9 @@ export class DataSet extends Set<string> {
     return newSet;
   }
 
-  sort(key: string, fn: (value: string, value2: string) => number): DataSet {
-    const newSet = new DataSet();
-    const sort = (arr: string[]): string[] => {
+  sort(fn: (value: V, value2: V) => number): DataSet<V> {
+    const newSet = new DataSet<V>();
+    const sort = (arr: V[]): V[] => {
       if (arr.length <= 1) {
         return arr;
       }
@@ -66,50 +66,51 @@ export class DataSet extends Set<string> {
   }
 }
 
-export class DataStore extends Map<string, DataSet> {
+export class DataStore<V = string> extends Map<string, DataSet<V>> {
   _exist(key: string): Error {
     return new Error(`Key ${key} already exists`);
   }
   _notExist(key: string): Error {
     return new Error(`Key ${key} does not exist`);
   }
+  _path: string;
 
   // core functions
-  create<T extends Value>(key: string, value: T): T {
+  create(key: string, value: Value<V>): string {
     if (this.has(key)) {
       throw this._exist(key);
     } else {
-      let _value: DataSet;
-      if (typeof value === 'string') {
-        _value = new DataSet([value]);
-      } else if (value instanceof DataSet) {
+      let _value: DataSet<V>;
+      if (value instanceof DataSet) {
         _value = value;
-      } else {
+      } else if (Array.isArray(value) || value instanceof Set) {
         _value = new DataSet(value);
+      } else {
+        _value = new DataSet([value]);
       }
       this.set(key, _value);
-      return value;
+      return key;
     }
   }
-  read(key: string): DataSet | null {
+  read(key: string): DataSet<V> | null {
     if (this.has(key)) {
       return this.get(key);
     } else {
       return null;
     }
   }
-  update<T extends Value>(key: string, value: T): T {
+  update(key: string, value: Value<V>): DataSet<V> {
     if (this.has(key)) {
-      let _value: DataSet;
-      if (typeof value === 'string') {
-        _value = new DataSet([value]);
-      } else if (value instanceof DataSet) {
+      let _value: DataSet<V>;
+      if (value instanceof DataSet) {
         _value = value;
-      } else {
+      } else if (Array.isArray(value) || value instanceof Set) {
         _value = new DataSet(value);
+      } else {
+        _value = new DataSet([value]);
       }
       this.set(key, _value);
-      return value;
+      return _value;
     } else {
       throw this._notExist(key);
     }
@@ -144,12 +145,12 @@ export class DataStore extends Map<string, DataSet> {
     if (this.has(key) && this.has(key2)) {
       const set = this.get(key).push(this.get(key2));
       this.set(key, set);
-      return 
+      return
     } else {
       throw this._notExist(!this.has(key) ? key : key2);
     }
   }
-  push(key: string, value: Value): void {
+  push(key: string, value: Value<V>): void {
     if (this.has(key)) {
       this.get(key).push(value);
     } else {
@@ -163,11 +164,21 @@ export class DataStore extends Map<string, DataSet> {
       throw this._notExist(key);
     }
   }
-  sort(key: string, fn: (value: string, value2: string) => number): void {
+  sort(key: string, fn: (value: V, value2: V) => number): DataSet<V> {
     if (this.has(key)) {
-      this.get(key).sort(key, fn);
+      this.get(key).sort(fn);
+      return this.get(key);
     } else {
       throw this._notExist(key);
     }
   }
+
+  // persistence functions
+  // use(path: string): void {
+  //   this._path = path;
+  //   if (!fs.existsSync(path)) throw new Error(`Path ${path} does not exist`);
+  //   if (!fs.lstatSync(path).isDirectory()) throw new Error(`Path ${path} is not a directory`);
+  //   if (!fs.accessSync(path, fs.constants.W_OK)) throw new Error(`Path ${path} is not writable`);
+  //   if (!fs.accessSync(path, fs.constants.R_OK)) throw new Error(`Path ${path} is not readable`);
+  // }
 }
