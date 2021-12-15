@@ -145,28 +145,65 @@ describe('DataStore', () => {
     describe('merge', () => {
       it('merge', () => {
         db.create('key', 'value');
-        db.merge('key', 'new value');
-        expect(db.read('key')).toEqual(new DataSet(['value', 'new value']));
+        db.create('key2', 'value2');
+        db.merge('key', 'key2');
+        expect(db.read('key')).toEqual(new DataSet(['value', 'value2']));
       });
 
       it('merge using non-existent key', () => {
-        expect(() => db.merge('key', 'new value')).toThrow(
+        expect(() => db.merge('key', 'key2')).toThrow(
           new Error('Key key does not exist')
+        );
+        db.create('key', 'value');
+        expect(() => db.merge('key', 'key2')).toThrow(
+          new Error('Key key2 does not exist')
         );
       });
     });
 
     describe('sort', () => {
       it('sort', () => {
-        db.create('key', 'value');
+        db.create('key', ['value', 'foo', 'bar']);
         db.sort('key', (a, b) => a.localeCompare(b));
-        expect(db.read('key')).toEqual(new DataSet(['value']));
+        expect(db.read('key')).toEqual(new DataSet(['bar', 'foo', 'value']));
       });
 
       it('sort using non-existent key', () => {
         expect(() => db.sort('key', (a, b) => a.localeCompare(b))).toThrow(
           new Error('Key key does not exist')
         );
+      });
+    });
+
+    describe('push', () => {
+      it('push', () => {
+        db.create('key', 'value');
+        db.push('key', 'foo');
+        expect(db.read('key')).toEqual(new DataSet(['value', 'foo']));
+      });
+
+      it('push using non-existent key', () => {
+        expect(() => db.push('key', 'foo')).toThrow(
+          new Error('Key key does not exist')
+        );
+      });
+    });
+
+    describe('pop', () => {
+      it('pop', () => {
+        db.create('key', ['value', 'foo', 'bar']);
+        db.pop('key');
+        expect(db.read('key')).toEqual(new DataSet(['value', 'foo']));
+      });
+
+      it('pop if size 0', () => {
+        db.create('key', 'value');
+        db.pop('key');
+        expect(db.read('key')).toEqual(new DataSet());
+      });
+
+      it('pop using non-existent key', () => {
+        expect(() => db.pop('key')).toThrow(new Error('Key key does not exist'));
       });
     });
   });
@@ -204,7 +241,7 @@ describe('DataSet', () => {
       expect(db.read('key')).toEqual(new DataSet(['foo']));
     });
 
-    it('pop with 0 values', () => {
+    it('pop if size 0', () => {
       db.create('key', []);
       const set = db.read('key');
       const result = set.pop();
@@ -234,5 +271,6 @@ describe('DataSet', () => {
     const set = db.read('key');
     const result = set.sort('key', (value: string, value2: string) => value.localeCompare(value2));
     expect(result).toEqual(new DataSet(['bar', 'foo', 'value']));
+    expect(db.read('key')).toEqual(new DataSet(['value', 'foo', 'bar']));
   });
 });

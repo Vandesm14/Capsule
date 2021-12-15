@@ -1,4 +1,4 @@
-export type Value = string | Set<string> | DataSet | string[];
+export type Value = string | string[] | Set<string> | DataSet;
 
 export class DataSet extends Set<string> {
   push(value: Value): DataSet {
@@ -67,10 +67,17 @@ export class DataSet extends Set<string> {
 }
 
 export class DataStore extends Map<string, DataSet> {
+  _exist(key: string): Error {
+    return new Error(`Key ${key} already exists`);
+  }
+  _notExist(key: string): Error {
+    return new Error(`Key ${key} does not exist`);
+  }
+
   // core functions
   create<T extends Value>(key: string, value: T): T {
     if (this.has(key)) {
-      throw new Error(`Key ${key} already exists`);
+      throw this._exist(key);
     } else {
       let _value: DataSet;
       if (typeof value === 'string') {
@@ -104,14 +111,14 @@ export class DataStore extends Map<string, DataSet> {
       this.set(key, _value);
       return value;
     } else {
-      throw new Error(`Key ${key} does not exist`);
+      throw this._notExist(key);
     }
   }
   destroy(key: string): void {
     if (this.has(key)) {
       this.delete(key);
     } else {
-      throw new Error(`Key ${key} does not exist`);
+      throw this._notExist(key);
     }
   }
 
@@ -122,7 +129,7 @@ export class DataStore extends Map<string, DataSet> {
       this.delete(oldKey);
       return newKey;
     } else {
-      throw new Error(`Key ${oldKey} does not exist`);
+      throw this._notExist(oldKey);
     }
   }
   duplicate<K extends string>(key: string, newKey: K): K {
@@ -130,21 +137,37 @@ export class DataStore extends Map<string, DataSet> {
       this.set(newKey, this.get(key));
       return newKey;
     } else {
-      throw new Error(`Key ${key} does not exist`);
+      throw this._notExist(key);
     }
   }
-  merge(key: string, value: Value): void {
+  merge(key: string, key2: string): void {
+    if (this.has(key) && this.has(key2)) {
+      const set = this.get(key).push(this.get(key2));
+      this.set(key, set);
+      return 
+    } else {
+      throw this._notExist(!this.has(key) ? key : key2);
+    }
+  }
+  push(key: string, value: Value): void {
     if (this.has(key)) {
       this.get(key).push(value);
     } else {
-      throw new Error(`Key ${key} does not exist`);
+      throw this._notExist(key);
+    }
+  }
+  pop(key: string): void {
+    if (this.has(key)) {
+      this.get(key).pop();
+    } else {
+      throw this._notExist(key);
     }
   }
   sort(key: string, fn: (value: string, value2: string) => number): void {
     if (this.has(key)) {
       this.get(key).sort(key, fn);
     } else {
-      throw new Error(`Key ${key} does not exist`);
+      throw this._notExist(key);
     }
   }
 }
