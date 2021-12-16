@@ -1,5 +1,5 @@
 import { readdirSync, statSync, readFileSync } from 'fs';
-import { DataStore } from 'nedb-promises';
+import DataStore from 'nedb-promises';
 import path from 'path';
 
 type model = {
@@ -8,6 +8,9 @@ type model = {
 }
 
 const db = DataStore.create<model>({ filename: 'database.db', autoload: true });
+
+const pk = (el: string) => ({ path: el });
+const upsert = { upsert: true };
 
 // @ts-ignore
 import dotenv from 'dotenv';
@@ -42,12 +45,22 @@ const data = recursiveReadDir(obsidian, new Map());
   console.log(data);
 
   for (const [key, value] of data.entries()) {
-    await db.insert({ path: key, values: value });
+    await db.update(pk(key), { path: key, values: value }, upsert);
+  }
+
+  // delete keys that are not in the database
+  const keys = await db.find({});
+  for (const key of keys) {
+    if (!data.has(key.path)) {
+      await db.remove(pk(key.path), {});
+    }
   }
 
   // sort the db by path and print an array of the paths
   const sorted = await db.find({}).sort({ path: 1 });
-  console.log(sorted.map(x => x.path));
+  console.log(sorted.map(x => x.path).join('\n'));
+
+  db.persistence.compactDatafile();
 })();
 
 // const count = new Map<string, number>();
