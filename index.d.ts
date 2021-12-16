@@ -64,7 +64,7 @@ declare module 'nedb-promises' {
    *
    * @class
    */
-  export class DataStore<D extends object = {}> extends EventEmitter {
+  export default class DataStore<D extends object = {}> extends EventEmitter {
 
     persistence: Nedb.Persistence
 
