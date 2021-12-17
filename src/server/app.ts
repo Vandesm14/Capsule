@@ -45,7 +45,7 @@ const data = recursiveReadDir(obsidian, new Map());
   console.log(data);
 
   for (const [key, value] of data.entries()) {
-    await db.update(pk(key), { path: key, values: value }, upsert);
+    await db.update(pk(key), { path: key, tags: [...value] }, upsert);
   }
 
   // delete keys that are not in the database

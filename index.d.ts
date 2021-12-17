@@ -122,7 +122,7 @@ declare module 'nedb-promises' {
      * @param  {Object|Object[]} docs
      * @return {Promise.<Object|Object[]>}
      */
-    insert<T extends any | any[]>(docs: T): Promise<T & Document<D>>
+    insert<T extends D | D[]>(docs: T): Promise<T & Document<D>>
 
     /**
      * Update documents that match a query.
@@ -138,19 +138,19 @@ declare module 'nedb-promises' {
 
     update<T>(
       query: any,
-      updateQuery: any,
+      updateQuery: D,
       options?: Nedb.UpdateOptions & { returnUpdatedDocs?: false }
     ): Promise<number>
 
     update<T>(
       query: any,
-      updateQuery: any,
+      updateQuery: D,
       options?: Nedb.UpdateOptions & { returnUpdatedDocs: true; multi?: false }
     ): Promise<T & Document<D>>
 
     update<T>(
       query: any,
-      updateQuery: any,
+      updateQuery: D,
       options?: Nedb.UpdateOptions & { returnUpdatedDocs: true; multi: true }
     ): Promise<(T & Document<D>)[]>
 
